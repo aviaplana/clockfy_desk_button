@@ -3,7 +3,6 @@ python:
     - "2.7"
 
 # Cache PlatformIO packages using Travis CI container-based infrastructure
-sudo: false
 cache:
     directories:
         - "~/.platformio"
@@ -14,3 +13,4 @@ install:
 
 script:
     - platformio run -e d1_mini
+    - platformio test -e native
