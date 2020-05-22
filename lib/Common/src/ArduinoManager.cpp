@@ -1,4 +1,4 @@
-#ifndef UNIT_TEST 
+#ifdef ARDUINO 
 #include <ArduinoManager.h>
 
 void ArduinoManager::doDigitalWrite(uint8_t pin, uint8_t val) {

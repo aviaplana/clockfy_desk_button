@@ -1,5 +1,3 @@
-#ifndef UNIT_TEST
-
 #include <Arduino.h>
 #include <ArduinoManager.h>
 #include <Lamp.h>
@@ -54,5 +52,3 @@ void loop() {
     change_color();
   }
 }
-
-#endif
