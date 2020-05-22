@@ -2,8 +2,7 @@
 #define LAMP_H
 
 #include <Arduino.h>
-
-typedef unsigned char byte;
+#include "types.h"
 
 typedef struct Color {
         byte red;
