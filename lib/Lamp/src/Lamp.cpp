@@ -11,9 +11,13 @@ void Lamp::setup() {
 }
 
 void Lamp::change_color(Color color) {
-    _current_color = color;
+    current_color = color;
 
     digitalWrite(red_led_pin, (color.red > 0));
     digitalWrite(green_led_pin, (color.green > 0));
     digitalWrite(blue_led_pin, (color.blue > 0));
+}
+
+Color Lamp::get_color() {
+    return current_color;
 }
