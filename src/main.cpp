@@ -39,9 +39,9 @@ Color get_next_color() {
 }
 
 void change_color() {
-  Serial.println("Changing color!");
   Color color = get_next_color();
-  
+  Serial.printf("R:%d\tG:%d\tB:%d\n", color.red, color.green, color.blue);
+
   lamp.change_color(color);
 }
 
