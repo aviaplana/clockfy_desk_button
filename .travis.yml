@@ -8,12 +8,9 @@ cache:
     directories:
         - "~/.platformio"
 
-env:
-    - LINUX_SRC=linux
-
 install:
     - pip install -U platformio
     - platformio update
 
 script:
-    - platformio run ./ -e d1_mini
+    - platformio run -e d1_mini
