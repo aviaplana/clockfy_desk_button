@@ -1,4 +1,7 @@
+#ifndef UNIT_TEST
+
 #include <Arduino.h>
+#include <ArduinoManager.h>
 #include <Lamp.h>
 #include <Button.h>
 
@@ -7,8 +10,9 @@
 #define BLUE_LED_PIN D6
 #define BUTTON_PIN D2
 
-Lamp lamp { RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
-Button button {BUTTON_PIN};
+ArduinoManager arduino_manager {};
+Lamp lamp { &arduino_manager, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
+Button button { &arduino_manager, BUTTON_PIN};
 byte current_color = 0;
 
 // "this" can't be passed to the ISR, therefore I can't define it inside the Button class. 
@@ -50,3 +54,5 @@ void loop() {
     change_color();
   }
 }
+
+#endif
