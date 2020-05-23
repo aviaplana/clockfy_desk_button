@@ -8,8 +8,6 @@
 #define GREEN_LED_PIN 2
 #define BLUE_LED_PIN 3
 
-
-
 MockArduino mockArduino = MockArduino();
 Lamp lamp = Lamp(&mockArduino, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN);
 
@@ -25,7 +23,6 @@ void test_red(void) {
     TEST_ASSERT_EQUAL(LOW, mockArduino.doDigitalRead(GREEN_LED_PIN));
     TEST_ASSERT_EQUAL(LOW, mockArduino.doDigitalRead(BLUE_LED_PIN));
 }
-
 
 void test_blue(void) {
     // Given
@@ -54,12 +51,9 @@ void test_green(void) {
 
 }
 
-int main(int argc, char **argv) {
+void run_lamp_tests() {
     lamp.setup();
-
-    UNITY_BEGIN();
     RUN_TEST(test_red);
-    UNITY_END();
 }
 
 #endif

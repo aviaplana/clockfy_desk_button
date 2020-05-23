@@ -2,6 +2,7 @@
 #include <ArduinoManager.h>
 #include <Lamp.h>
 #include <Button.h>
+#include <TimerRepository.h>
 
 #define RED_LED_PIN D8
 #define GREEN_LED_PIN D7
