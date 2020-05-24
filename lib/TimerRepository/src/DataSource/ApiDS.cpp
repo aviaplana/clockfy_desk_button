@@ -8,7 +8,6 @@ Project** ApiDS::getProjects() {
     WiFiClientSecure client = getConnectedClient();
     String endpoint = "/workspaces/{workspaceId}/projects";
 
-
     String request = "GET" + endpoint + " HTTP/1.1\r\n" +
             "X-Api-Key: " + API_KEY + "\r\n" +
             "content-type: application/json\r\n" +

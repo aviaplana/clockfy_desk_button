@@ -15,6 +15,7 @@ ArduinoManager arduino_manager {};
 Lamp lamp { &arduino_manager, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
 Button button { &arduino_manager, BUTTON_PIN};
 byte current_color = 0;
+TimerRepository timer_repository;
 
 // "this" can't be passed to the ISR, therefore I can't define it inside the Button class. 
 void ICACHE_RAM_ATTR button_isr() {
