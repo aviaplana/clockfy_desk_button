@@ -3,12 +3,14 @@
 #include <Lamp.h>
 #include <Button.h>
 #include <TimerRepository.h>
+#include <WifiManager.h>
 
 #define RED_LED_PIN D8
 #define GREEN_LED_PIN D7
 #define BLUE_LED_PIN D6
 #define BUTTON_PIN D2
 
+WifiManager wifi;
 ArduinoManager arduino_manager {};
 Lamp lamp { &arduino_manager, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
 Button button { &arduino_manager, BUTTON_PIN};
@@ -19,12 +21,28 @@ void ICACHE_RAM_ATTR button_isr() {
     button.isr();
 }
 
+void connect_wifi() {
+  wifi.setup();
+  wifi.connect();
+
+  Serial.print("Connecting to the wifi ");
+  Serial.print(wifi.getSSID());
+
+  while (!wifi.is_connected()) {
+    Serial.print(".");
+    delay(200);
+  }
+
+  Serial.println("connected");  
+}
+
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting up...");
 
   lamp.setup();
   button.setup(button_isr, FALLING);
+  connect_wifi();
 }
 
 Color get_next_color() {

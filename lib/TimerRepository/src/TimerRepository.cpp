@@ -12,5 +12,5 @@ TimerRepository::TimerRepository(DataSource* local, DataSource* api) {
 }
 
 Project** TimerRepository::getProjects() {
-    return local_ds->getProjects();
+    return api_ds->getProjects();
 }
