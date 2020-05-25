@@ -1,3 +1,5 @@
+#define DEBUG_API 1
+
 #include <Arduino.h>
 #include <ArduinoManager.h>
 #include <Lamp.h>
@@ -44,6 +46,7 @@ void setup() {
   lamp.setup();
   button.setup(button_isr, FALLING);
   connect_wifi();
+  timer_repository.getProjects();
 }
 
 Color get_next_color() {

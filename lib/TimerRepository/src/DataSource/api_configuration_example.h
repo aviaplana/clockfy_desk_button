@@ -1,6 +1,7 @@
 #ifndef API_SENSIBLE_DATA_H
 #define API_SENSIBLE_DATA_H
 
-#define API_KEY "TOKEN"
+#define API_KEY "KEY"
+#define API_WORKSPACE_ID "WORKSPACE_ID"
 
 #endif

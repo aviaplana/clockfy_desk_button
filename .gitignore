@@ -1,4 +1,4 @@
 .pio
 .vscode
 lib/WifiManager/src/wifi_configuration.h
-lib/TimerRepository/src/DataSource/api_sensible_data.h
+lib/TimerRepository/src/DataSource/api_configuration.h

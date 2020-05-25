@@ -14,3 +14,12 @@ TimerRepository::TimerRepository(DataSource* local, DataSource* api) {
 Project** TimerRepository::getProjects() {
     return api_ds->getProjects();
 }
+
+
+void TimerRepository::startTimer(char* project_id) {
+
+}
+
+void TimerRepository::stopTimer(char* project_id) {
+    
+}

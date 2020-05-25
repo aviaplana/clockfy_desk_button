@@ -1,9 +1,11 @@
 #ifndef API_DS_H
 #define API_DS_H
 
+#define DEBUG_API
+
 #include <WiFiClientSecure.h> 
 #include "DataSource.h"
-#include "api_sensible_data.h"
+#include "api_configuration.h"
 
 class ApiDS: public DataSource {
     public:
@@ -12,11 +14,17 @@ class ApiDS: public DataSource {
 
     private:
         BearSSL::WiFiClientSecure getConnectedClient();
+        String getRequest(String* endpoint);
+        String getRequest(String* endpoint, String* headers);
+        void readResponseHeaders(WiFiClientSecure* client);
+        String getResponseBody(WiFiClientSecure* client);
+
         const char* host = "api.clockify.me";
-        const int https_port = 443;
+        const char* endpoint_prefix = "/api/v1";
+        const int port = 443;
         const unsigned int max_retry = 10;
         const unsigned long timeout = 15000;
-        const char* fingerprint = "4C 70 A3 F9 41 36 E3 03 99 0A 27 57 52 DA 45 D6 42 8E E4 2B";
+        const char* fingerprint = "C1 3A B9 2C 13 FF F0 24 B1 7B 8F A0 4D AA AD 67 CE 7C 9D 69";
 };
 
 #endif

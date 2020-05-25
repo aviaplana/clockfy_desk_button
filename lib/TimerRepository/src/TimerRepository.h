@@ -10,7 +10,6 @@ class TimerRepository {
     public:
         TimerRepository();
         TimerRepository(DataSource* local, DataSource* api); // For testing pourposes
-        void begin();
         Project** getProjects();
         void startTimer(char* project_id);
         void stopTimer(char* project_id);
