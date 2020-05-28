@@ -4,3 +4,5 @@
 ### Desk button
 
 Desk button to start timers.
+
+An api key might be found across commit history. It is no longer valid.
