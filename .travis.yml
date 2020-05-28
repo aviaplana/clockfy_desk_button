@@ -12,5 +12,7 @@ install:
     - platformio update
 
 script:
+    - mv lib/TimerRepository/include/api_configuration_example.h lib/TimerRepository/include/api_configuration.h
+    - mv lib/WifiManager/src/wifi_configuation_example.h lib/WifiManager/src/wifi_configuation.h
     - platformio run -e d1_mini
     - platformio test -e native
