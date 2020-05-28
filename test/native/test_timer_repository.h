@@ -1,8 +1,10 @@
+#ifdef UNIT_TEST
+
 #include "TimerRepository.h"
 #include "unity.h"
 #include <iostream>
-
-#ifdef UNIT_TEST
+#include <stdlib.h>
+#include <string.h>
 
 #define NUM_PROJECTS 4
 
@@ -63,6 +65,8 @@ void test_api_data_should_be_stored_locally() {
     while(projects[num_local_projects] != NULL) {
         num_local_projects++;
     }
+
+    free(projects);
 
     TEST_ASSERT_EQUAL_MESSAGE(num_api_projects, num_local_projects, "Projects are not saved to the LocalDS.");
 }

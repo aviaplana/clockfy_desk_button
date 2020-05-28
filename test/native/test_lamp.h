@@ -1,8 +1,8 @@
+#ifdef UNIT_TEST
+
 #include "Lamp.h"
 #include "utils/ArduinoMock.cpp"
 #include "unity.h"
-
-#ifdef UNIT_TEST
 
 #define RED_LED_PIN 1
 #define GREEN_LED_PIN 2
