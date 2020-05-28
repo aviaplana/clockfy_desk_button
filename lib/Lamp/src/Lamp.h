@@ -4,12 +4,6 @@
 #include <types.h>
 #include <ArduinoInterface.h>
 
-typedef struct Color {
-        byte red;
-        byte green;
-        byte blue;
-} Color;
-
 class Lamp {
     public:
         Lamp(ArduinoInterface* arduino_manager, byte red, byte green, byte blue);

@@ -3,21 +3,23 @@
 
 #include "LocalDS.h"
 
-LocalDS::LocalDS() {
+LocalDS::LocalDS(ArduinoInterface* arduino_manager): arduino_manager(arduino_manager) {
 
 }
 
-Project** LocalDS::getProjects() {
-    const unsigned int num_projects = 4;
-    struct Project** projects = (struct Project**) malloc(sizeof(struct Project*) * num_projects);
+void LocalDS::storeProjects(Project** projects) {
+    this->projects = projects;
+    last_updated = arduino_manager->doMillis();
+}
 
-    for (int i = 0; i < num_projects; i++) {
-        projects[i] = (struct Project*) malloc(sizeof(struct Project));
-
-        strcpy(projects[i]->id, "FakeId");
-        strcpy(projects[i]->name, "Project name ");
-        strcpy(projects[i]->color, "#AABBCC");
+bool LocalDS::dataExpired() {
+    if (projects == NULL) {
+        return true;
     }
+    
+    return ((arduino_manager->doMillis() - last_updated) > max_data_duration); 
+}
 
+Project** LocalDS::getProjects() {
     return projects;
 }

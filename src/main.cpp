@@ -5,6 +5,8 @@
 #include <Lamp.h>
 #include <Button.h>
 #include <TimerRepository.h>
+#include <LocalDS.h>
+#include <ApiDS.h>
 #include <WifiManager.h>
 
 #define RED_LED_PIN D8
@@ -14,10 +16,13 @@
 
 WifiManager wifi;
 ArduinoManager arduino_manager {};
+LocalDS local_ds {&arduino_manager};
+ApiDS api_ds {};
+
 Lamp lamp { &arduino_manager, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
 Button button { &arduino_manager, BUTTON_PIN};
 byte current_color = 0;
-TimerRepository timer_repository;
+TimerRepository timer_repository {&local_ds, &local_ds};
 
 // "this" can't be passed to the ISR, therefore I can't define it inside the Button class. 
 void ICACHE_RAM_ATTR button_isr() {
@@ -46,7 +51,6 @@ void setup() {
   lamp.setup();
   button.setup(button_isr, FALLING);
   connect_wifi();
-  timer_repository.getProjects();
 }
 
 Color get_next_color() {

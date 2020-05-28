@@ -1,3 +1,4 @@
+#ifndef UNIT_TEST
 #include "WifiManager.h"
 #include "wifi_configuration.h"
 
@@ -22,3 +23,5 @@ void WifiManager::connect() {
 bool WifiManager::is_connected() {
     return WiFi.status() == WL_CONNECTED;
 }
+
+#endif

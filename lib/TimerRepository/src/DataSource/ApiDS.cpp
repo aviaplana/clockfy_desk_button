@@ -1,3 +1,4 @@
+#ifndef UNIT_TEST
 #include "ApiDS.h"
 
 ApiDS::ApiDS() {
@@ -76,15 +77,113 @@ Project** ApiDS::getProjects() {
         client.print(request);
 
         readResponseHeaders(&client);
-        String response = getResponseBody(&client);
         
-        return 0;
+        char* buffer = (char*) malloc(50);
+        client.find("[{");
+        uint8_t counter = 0;
+        struct Project** projects = (struct Project**) malloc(sizeof(struct Project*) * 20);
+
+        while (true) {
+            projects[counter] = parseResponse(buffer, (Stream*) &client);
+            
+            if (projects[counter] == 0) {
+                break;
+            }
+
+            counter++;     
+        }
+        
+        return projects;
     }
+
+    return 0;
+}
+
+Project* ApiDS::parseResponse(char* buffer, Stream* stream) {
+    Project* project = (Project*) malloc(sizeof(Project));
+
+    char* tag = (char*) malloc(30);
+    strcpy(tag, "\"id\":\"");
+    int size = processResponse(tag, buffer, stream);
+
+    if (size < 1) return 0;
+    strncpy(project->id, buffer, size);
+    project->id[size] = '\0';
+
+    strcpy(tag, "\"name\":\"");
+    size = processResponse(tag, buffer, stream);
+
+    if (size < 1) return 0;
+    strncpy(project->name, buffer, size);
+    project->name[size] = '\0';
+
+    strcpy(tag, "\"color\":\"");
+    size = processResponse(tag, buffer, stream);
+
+    if (size < 1) return 0;
+    char* color_hex = (char*) malloc(10);
+    strncpy(color_hex, buffer, size);
+    color_hex[size] = '\0';
+
+    project->color = hexToColor(color_hex);
+    free(color_hex);
+
+    #ifdef DEBUG_API
+        Serial.print(F("\n"));
+    #endif
+
+    free(tag);
+    
+    return project;
+}
+
+Color ApiDS::hexToColor(char* hex) {
+    Color color;
+
+    char* part = (char*) malloc(2);
+    strncpy(part, hex + 1, 2);
+    color.red = (byte) strtol(part, NULL, 16);
+    
+    strncpy(part, hex + 3, 2);
+    color.green = (byte) strtol(part, NULL, 16);
+
+    strncpy(part, hex + 5, 2);
+    color.blue = (byte) strtol(part, NULL, 16);
+
+    return color;
+
+}
+
+unsigned int ApiDS::processResponse(char* tag, char* buffer, Stream* stream) {
+    if (!stream->find(tag)) return -1;
+    size_t size = stream->readBytesUntil('"', buffer, 30);
+
+    #ifdef DEBUG_API
+        printResponsePart(tag, buffer, size);
+    #endif
+
+    return size;
+}
+
+void ApiDS::printResponsePart(char* tag, char* buffer, size_t long_bytes) {
+    if (long_bytes == 0) return;
+
+    Serial.printf("%s", tag);
+
+    for (unsigned int i = 0; i < long_bytes; i++) {
+        Serial.print(buffer[i]);
+    }
+
+    Serial.print(F("\", "));
 }
 
 BearSSL::WiFiClientSecure ApiDS::getConnectedClient() {
     #ifdef DEBUG_API
-        Serial.printf("Connecting to %s:%d\n", host, port);
+        Serial.print(F("Connecting to "));
+        Serial.print(host);
+        Serial.print(F(":"));
+        Serial.print(port);
+        Serial.print(F("\n"));
     #endif
 
     WiFiClientSecure httpsClient;
@@ -103,7 +202,9 @@ BearSSL::WiFiClientSecure ApiDS::getConnectedClient() {
 
     #ifdef DEBUG_API
         if(retry_counter == max_retry) {
-            Serial.printf("Connection failed! Error code: %d\n", httpsClient.getLastSSLError());
+            Serial.print(F("Connection failed! Error code: "));
+            Serial.print(httpsClient.getLastSSLError());
+            Serial.print(F("\n"));
         } else {
             Serial.println(F("Connected!"));
         }
@@ -111,3 +212,5 @@ BearSSL::WiFiClientSecure ApiDS::getConnectedClient() {
 
     return httpsClient;
 }
+
+#endif

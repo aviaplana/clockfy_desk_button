@@ -1,4 +1,4 @@
-#ifndef API_DS_H
+#if !defined(API_DS_H) && !defined(UNIT_TEST)
 #define API_DS_H
 
 #define DEBUG_API
@@ -18,6 +18,11 @@ class ApiDS: public DataSource {
         String getRequest(String* endpoint, String* headers);
         void readResponseHeaders(WiFiClientSecure* client);
         String getResponseBody(WiFiClientSecure* client);
+        void printResponsePart(char* tag, char* buffer, size_t long_bytes);
+        Project* parseResponse(char* buffer, Stream* stream);
+        unsigned int processResponse(char* tag, char* budder, Stream* stream);
+        Color hexToColor(char* hex);
+
 
         const char* host = "api.clockify.me";
         const char* endpoint_prefix = "/api/v1";

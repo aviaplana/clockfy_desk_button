@@ -1,20 +1,23 @@
 #include <stdlib.h>
 #include "TimerRepository.h"
 
-TimerRepository::TimerRepository() {
-    local_ds = new LocalDS();
-    api_ds = new ApiDS();
-}
-
-TimerRepository::TimerRepository(DataSource* local, DataSource* api) {
+TimerRepository::TimerRepository(LocalDS* local, DataSource* api) {
     local_ds = local;
     api_ds = api;
 }
 
 Project** TimerRepository::getProjects() {
-    return api_ds->getProjects();
-}
+    Project** projects;
 
+    if (local_ds->dataExpired()) {
+        projects = api_ds->getProjects();
+        local_ds->storeProjects(projects);
+    } else {
+        projects = local_ds->getProjects();
+    }
+    
+    return projects;
+}
 
 void TimerRepository::startTimer(char* project_id) {
 

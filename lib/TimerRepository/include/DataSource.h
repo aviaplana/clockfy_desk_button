@@ -1,6 +1,6 @@
 #ifndef DATA_SOURCE_H
 #define DATA_SOURCE_H
-#include "../entity/Project.h"
+#include "Project.h"
 
 class DataSource {
     public:

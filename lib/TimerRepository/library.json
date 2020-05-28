@@ -1,0 +1,7 @@
+{
+    "name": "TImer repository",
+    "version": "0.1",
+    "build": {
+        "includeDir": "include"
+    }
+}
