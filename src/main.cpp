@@ -16,13 +16,15 @@
 
 WifiManager wifi;
 ArduinoManager arduino_manager {};
-LocalDS local_ds {&arduino_manager};
+LocalDS local_ds {};
 ApiDS api_ds {};
 
 Lamp lamp { &arduino_manager, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
 Button button { &arduino_manager, BUTTON_PIN};
-byte current_color = 0;
-TimerRepository timer_repository {&local_ds, &local_ds};
+TimerRepository timer_repository {&local_ds, &api_ds};
+
+byte num_projects = 0;
+byte current_project = 0;
 
 // "this" can't be passed to the ISR, therefore I can't define it inside the Button class. 
 void ICACHE_RAM_ATTR button_isr() {
@@ -51,31 +53,24 @@ void setup() {
   lamp.setup();
   button.setup(button_isr, FALLING);
   connect_wifi();
+
+  num_projects = timer_repository.getNumProjects();
 }
 
-Color get_next_color() {
-  current_color++;
-
-  if (current_color > 7) {
-    current_color = 0;
+void change_project() {
+  current_project++;
+  
+  if (current_project >= num_projects) {
+    current_project = 0;
   }
 
-  return Color {
-    current_color & 0b100,
-    current_color & 0b010,
-    current_color & 0b001,
-  };
-}
-
-void change_color() {
-  Color color = get_next_color();
-  Serial.printf("R:%d\tG:%d\tB:%d\n", color.red, color.green, color.blue);
-
-  lamp.change_color(color);
+  Project* project = timer_repository.getProjectPositon(current_project);
+  Serial.printf("R:%d\tG:%d\tB:%d\n", project->color.red, project->color.green, project->color.blue);
+  lamp.change_color(project->color);
 }
 
 void loop() {
   if (button.was_pressed()) {
-    change_color();
+    change_project();
   }
 }

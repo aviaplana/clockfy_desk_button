@@ -51,6 +51,22 @@ void test_green(void) {
 
 }
 
+
+void test_color(void) {
+    // Given
+    Color color = {200, 100, 50};
+
+    // When
+    lamp.change_color(color);
+
+    // Then
+    TEST_ASSERT_EQUAL(color.red, mockArduino.doAnalogRead(RED_LED_PIN));
+    TEST_ASSERT_EQUAL(color.green, mockArduino.doAnalogRead(GREEN_LED_PIN));
+    TEST_ASSERT_EQUAL(color.blue, mockArduino.doAnalogRead(BLUE_LED_PIN));
+
+}
+
+
 void run_lamp_tests() {
     lamp.setup();
     RUN_TEST(test_red);

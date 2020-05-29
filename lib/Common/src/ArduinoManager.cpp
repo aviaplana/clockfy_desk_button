@@ -5,6 +5,10 @@ void ArduinoManager::doDigitalWrite(uint8_t pin, uint8_t val) {
     digitalWrite(pin, val);
 }
 
+void ArduinoManager::doAnalogWrite(uint8_t pin, uint8_t val) {
+    analogWrite(pin, val);
+}
+
 int ArduinoManager::doDigitalRead(uint8_t pin) {
     return digitalRead(pin);
 }

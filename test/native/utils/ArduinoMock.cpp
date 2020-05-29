@@ -34,11 +34,37 @@ class MockArduino: public ArduinoInterface {
             int pin_pos = getPinPosition(pin);
 
             if (pin_pos >= 0) {
+                if (val > 0) {
+                    pins[pin_pos].value = HIGH;
+                } else {
+                    pins[pin_pos].value = LOW;
+                }
+            }
+        }
+
+        void doAnalogWrite(uint8_t pin, uint8_t val) {
+            int pin_pos = getPinPosition(pin);
+
+            if (pin_pos >= 0) {
                 pins[pin_pos].value = val;
             }
         }
 
         int doDigitalRead(uint8_t pin) {
+            int pin_pos = getPinPosition(pin);
+
+            if (pin_pos >= 0) {
+                if (pins[pin_pos].value > 0) {
+                    return HIGH;
+                } else {
+                    return LOW;
+                }
+            }
+
+            return -1;
+        }
+        
+        int doAnalogRead(uint8_t pin) {
             int pin_pos = getPinPosition(pin);
 
             if (pin_pos >= 0) {

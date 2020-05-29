@@ -29,7 +29,7 @@ class ApiDS: public DataSource {
         const int port = 443;
         const unsigned int max_retry = 10;
         const unsigned long timeout = 15000;
-        const char* fingerprint = "C1 3A B9 2C 13 FF F0 24 B1 7B 8F A0 4D AA AD 67 CE 7C 9D 69";
+        const char* fingerprint = "1F F5 7F 61 B4 30 75 92 82 A3 B6 92 39 B7 D7 77 0F 80 67 AE";
 };
 
 #endif

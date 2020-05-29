@@ -192,7 +192,7 @@ BearSSL::WiFiClientSecure ApiDS::getConnectedClient() {
     delay(100);
 
     unsigned int retry_counter = 0; //retry counter
-    int code = httpsClient.connect(host, port);
+    httpsClient.connect(host, port);
     
     while (!httpsClient.connect(host, port) &&
             (retry_counter < max_retry)) {

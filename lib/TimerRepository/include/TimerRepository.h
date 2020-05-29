@@ -11,6 +11,8 @@ class TimerRepository {
         Project** getProjects();
         void startTimer(char* project_id);
         void stopTimer(char* project_id);
+        Project* getProjectPositon(byte position);
+        byte getNumProjects();
 
     private:
         LocalDS* local_ds;

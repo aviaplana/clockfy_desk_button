@@ -7,6 +7,7 @@
 class ArduinoManager: public ArduinoInterface {
 public:
     void doDigitalWrite(uint8_t pin, uint8_t val);
+    void doAnalogWrite(uint8_t pin, uint8_t val);
     int doDigitalRead(uint8_t pin);
     void doPinMode(uint8_t pin, uint8_t mode);
     uint8_t doDigitalPinToInterrupt(uint8_t pin);

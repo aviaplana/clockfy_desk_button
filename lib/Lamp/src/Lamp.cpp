@@ -16,9 +16,9 @@ void Lamp::setup() {
 void Lamp::change_color(Color color) {
     current_color = color;
 
-    arduino_manager->doDigitalWrite(red_led_pin, (color.red > 0));
-    arduino_manager->doDigitalWrite(green_led_pin, (color.green > 0));
-    arduino_manager->doDigitalWrite(blue_led_pin, (color.blue > 0));
+    arduino_manager->doAnalogWrite(red_led_pin, color.red);
+    arduino_manager->doAnalogWrite(green_led_pin, color.green);
+    arduino_manager->doAnalogWrite(blue_led_pin, color.blue);
 }
 
 Color Lamp::get_color() {

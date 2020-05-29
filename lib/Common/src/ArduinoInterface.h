@@ -27,6 +27,7 @@
 class ArduinoInterface {
 public:
     virtual void doDigitalWrite(uint8_t pin, uint8_t val) = 0;
+    virtual void doAnalogWrite(uint8_t pin, uint8_t val) = 0;
     virtual int doDigitalRead(uint8_t pin) = 0;
     virtual void doPinMode(uint8_t pin, uint8_t mode) = 0;
     virtual uint8_t doDigitalPinToInterrupt(uint8_t pin) = 0;

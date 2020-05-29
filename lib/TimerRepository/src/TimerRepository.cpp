@@ -7,16 +7,31 @@ TimerRepository::TimerRepository(LocalDS* local, DataSource* api) {
 }
 
 Project** TimerRepository::getProjects() {
-    Project** projects;
+    Project** projects = local_ds->getProjects();
 
-    if (local_ds->dataExpired()) {
+    if (projects == NULL) {
         projects = api_ds->getProjects();
         local_ds->storeProjects(projects);
-    } else {
-        projects = local_ds->getProjects();
     }
     
     return projects;
+}
+
+Project* TimerRepository::getProjectPositon(byte position) {
+    Project** projects = getProjects();
+
+    return projects[position];
+}
+
+byte TimerRepository::getNumProjects() {
+    byte count = 0;
+    Project** projects = getProjects();
+    
+    while (projects[count] != NULL) {
+        count++;
+    }
+    
+    return count;
 }
 
 void TimerRepository::startTimer(char* project_id) {
