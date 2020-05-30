@@ -11,15 +11,17 @@ class ApiDS: public DataSource {
     public:
         ApiDS();
         Project** getProjects();
+        char* startTimer(char* project_id, char* start_time);
 
     private:
         BearSSL::WiFiClientSecure getConnectedClient();
-        String getRequest(String* endpoint);
-        String getRequest(String* endpoint, String* headers);
-        void readResponseHeaders(WiFiClientSecure* client);
+        String generateGetRequest(String* endpoint);
+        String generatePostRequest(String* endpoint, String* body);
+        String generateCommonRequest(String* endpoint);
+        int readResponseHeaders(WiFiClientSecure* client);
         String getResponseBody(WiFiClientSecure* client);
         void printResponsePart(char* tag, char* buffer, size_t long_bytes);
-        Project* parseResponse(char* buffer, Stream* stream);
+        Project* parseResponse(Stream* stream);
         unsigned int processResponse(char* tag, char* budder, Stream* stream);
         Color hexToColor(char* hex);
 

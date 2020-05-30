@@ -35,7 +35,7 @@ byte TimerRepository::getNumProjects() {
 }
 
 void TimerRepository::startTimer(char* project_id) {
-
+    // http://worldtimeapi.org/api/timezone/Europe/Madrid
 }
 
 void TimerRepository::stopTimer(char* project_id) {
