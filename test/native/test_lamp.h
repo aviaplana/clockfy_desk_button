@@ -52,7 +52,7 @@ void test_green(void) {
 }
 
 
-void test_color(void) {
+void test_mixed(void) {
     // Given
     Color color = {200, 100, 50};
 
@@ -70,6 +70,9 @@ void test_color(void) {
 void run_lamp_tests() {
     lamp.setup();
     RUN_TEST(test_red);
+    RUN_TEST(test_green);
+    RUN_TEST(test_blue);
+    RUN_TEST(test_mixed);
 }
 
 #endif

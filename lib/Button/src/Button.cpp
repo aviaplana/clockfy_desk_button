@@ -2,25 +2,30 @@
 
 Button::Button(ArduinoInterface* arduino_manager, byte pin): arduino_manager(arduino_manager), pin(pin) { }
 
-
-void Button::isr() {
-    if (arduino_manager->doMillis() - millis_last_isr > millis_debounce) {
-        millis_last_isr = arduino_manager->doMillis();
-        pressed = true;
-    }
-}
-
-void Button::setup(void (*isr)(), int interrupt_mode) {
+void Button::setup() {
     arduino_manager->doPinMode(pin, INPUT_PULLUP);
-    byte interruption_number = arduino_manager->doDigitalPinToInterrupt(pin);
-    arduino_manager->doAttachInterrupt(interruption_number, isr, interrupt_mode);
 }
 
-bool Button::was_pressed() {
-    if (pressed) {
-        pressed = false;
-        return true;
+press_type Button::was_pressed() {
+    press_type press = NO_PRESS;
+    if (arduino_manager->doDigitalRead(pin) == LOW) {
+        
+        if (millis_last_press == 0) {
+            millis_last_press = arduino_manager->doMillis();
+        }
+    } else if (millis_last_press > 0) {
+        const unsigned long diff_millis = arduino_manager->doMillis() - millis_last_press;
+
+        if (diff_millis > millis_debounce)  {
+            if (diff_millis > millis_long_press) {
+                press = LONG_PRESS;
+            } else {
+                press = SHORT_PRESS;
+            }
+        }
+
+        millis_last_press = 0;
     }
 
-    return false;
+    return press;
 }

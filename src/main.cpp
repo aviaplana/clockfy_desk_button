@@ -26,11 +26,6 @@ TimerRepository timer_repository {&local_ds, &api_ds};
 byte num_projects = 0;
 byte current_project = 0;
 
-// "this" can't be passed to the ISR, therefore I can't define it inside the Button class. 
-void ICACHE_RAM_ATTR button_isr() {
-    button.isr();
-}
-
 void connect_wifi() {
   wifi.setup();
   wifi.connect();
@@ -51,7 +46,7 @@ void setup() {
   Serial.println("Booting up...");
 
   lamp.setup();
-  button.setup(button_isr, FALLING);
+  button.setup();
   connect_wifi();
 
   num_projects = timer_repository.getNumProjects();
@@ -65,12 +60,22 @@ void change_project() {
   }
 
   Project* project = timer_repository.getProjectPositon(current_project);
-  Serial.printf("R:%d\tG:%d\tB:%d\n", project->color.red, project->color.green, project->color.blue);
+  Serial.printf("%s - R:%d\tG:%d\tB:%d\n", project->name, project->color.red, project->color.green, project->color.blue);
   lamp.change_color(project->color);
 }
 
 void loop() {
-  if (button.was_pressed()) {
-    change_project();
+  switch (button.was_pressed()) {
+    case SHORT_PRESS:
+      change_project();
+      break;
+    
+    case LONG_PRESS:
+      // TODO: Start / stop timer
+      break;
+
+    case NO_PRESS:
+      break;
+    
   }
 }
