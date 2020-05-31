@@ -29,4 +29,8 @@ unsigned long ArduinoManager::doMillis() {
     return millis();
 }
 
+void ArduinoManager::doDelay(unsigned long time) {
+    delay(time);
+}
+
 #endif

@@ -8,8 +8,6 @@
 #include <string.h>
 
 void test_api_data_should_be_stored_locally() {
-    TEST_MESSAGE("Starting get projects test...");
-
     //Given
     fakeit::Mock<ClockfyDS> mock_clockfy;
     fakeit::Mock<DateTimeDS> mock_datetime;    

@@ -13,6 +13,8 @@ public:
     uint8_t doDigitalPinToInterrupt(uint8_t pin);
     void doAttachInterrupt(uint8_t interruption_number, void (*isr)(), uint8_t mode);
     unsigned long doMillis();
+    void doDelay(unsigned long millis);
+
 };
 
 #endif

@@ -80,4 +80,6 @@ class MockArduino: public ArduinoInterface {
         void doAttachInterrupt(uint8_t interruption_number, void (*isr)(), uint8_t mode) { };
     
         unsigned long doMillis() { return 1000; }
+
+        void doDelay(unsigned long time) { }
 };

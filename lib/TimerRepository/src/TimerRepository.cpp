@@ -35,10 +35,17 @@ byte TimerRepository::getNumProjects() {
     return count;
 }
 
-void TimerRepository::startTimer(char* project_id) {
-    datetime_ds->getDateTime();
+char* TimerRepository::startTimer(char* project_id) {
+    char* date_time = datetime_ds->getDateTime();
+
+    if (date_time != "") {
+        char* timer_id = clockfy_ds->startTimer(project_id, date_time);
+        return timer_id;
+    } else {
+        return "";
+    }
 }
 
-void TimerRepository::stopTimer(char* project_id) {
+void TimerRepository::stopTimer(char* timer_id) {
     
 }

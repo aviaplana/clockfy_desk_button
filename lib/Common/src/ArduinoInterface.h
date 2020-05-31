@@ -33,6 +33,7 @@ public:
     virtual uint8_t doDigitalPinToInterrupt(uint8_t pin) = 0;
     virtual void doAttachInterrupt(uint8_t interruption_number, void (*isr)(), uint8_t mode) = 0;
     virtual unsigned long doMillis() = 0;
+    virtual void doDelay(unsigned long time) = 0;
 };
 
 #endif
