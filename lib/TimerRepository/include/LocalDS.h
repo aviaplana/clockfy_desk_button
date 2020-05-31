@@ -1,9 +1,8 @@
 #ifndef LOCAL_DS_H
 #define LOCAL_DS_H
-#include "DataSource.h"
 #include "Project.h"
 
-class LocalDS: public DataSource {
+class LocalDS {
     public:
         LocalDS();
         Project** getProjects();

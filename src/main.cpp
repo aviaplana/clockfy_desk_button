@@ -6,7 +6,8 @@
 #include <Button.h>
 #include <TimerRepository.h>
 #include <LocalDS.h>
-#include <ApiDS.h>
+#include <Clockfy/ClockfyDSImpl.h>
+#include <DateTime/DateTimeDSImpl.h>
 #include <WifiManager.h>
 
 #define RED_LED_PIN D8
@@ -16,12 +17,13 @@
 
 WifiManager wifi;
 ArduinoManager arduino_manager {};
+DateTimeDSImpl datetime_ds {};
 LocalDS local_ds {};
-ApiDS api_ds {};
+ClockfyDSImpl clockfy_ds {};
 
 Lamp lamp { &arduino_manager, RED_LED_PIN, GREEN_LED_PIN, BLUE_LED_PIN };
 Button button { &arduino_manager, BUTTON_PIN};
-TimerRepository timer_repository {&local_ds, &api_ds};
+TimerRepository timer_repository {&local_ds, &clockfy_ds, &datetime_ds};
 
 byte num_projects = 0;
 byte current_project = 0;

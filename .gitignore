@@ -1,4 +1,5 @@
 .pio
 .vscode
 lib/WifiManager/src/wifi_configuration.h
-lib/TimerRepository/include/api_configuration.h
+lib/TimerRepository/include/Clockfy/clockfy_configuration.h
+lib/TimerRepository/include/DateTime/date_time_configuration.h

@@ -11,9 +11,7 @@
 void test_no_press(void) {
     // Given
     fakeit::Mock<ArduinoInterface> mock;
-
-    ArduinoInterface &arduino_manager = mock.get();
-    Button button = Button(&arduino_manager, BUTTON_PIN);
+    Button button = Button(&mock.get(), BUTTON_PIN);
 
     // When
     fakeit::When(Method(mock, doMillis)).Return(100);
@@ -27,8 +25,7 @@ void test_short_press(void) {
     // Given
     unsigned long initial_millis = 100;
     fakeit::Mock<ArduinoInterface> mock;
-    ArduinoInterface &arduino_manager = mock.get();
-    Button button = Button(&arduino_manager, BUTTON_PIN);
+    Button button = Button(&mock.get(), BUTTON_PIN);
     fakeit::When(Method(mock, doMillis)).Return(initial_millis);
     fakeit::When(Method(mock, doDigitalRead)).Return(LOW);
     button.was_pressed();
@@ -45,8 +42,7 @@ void test_long_press(void) {
     // Given
     unsigned long initial_millis = 100;
     fakeit::Mock<ArduinoInterface> mock;
-    ArduinoInterface &arduino_manager = mock.get();
-    Button button = Button(&arduino_manager, BUTTON_PIN);
+    Button button = Button(&mock.get(), BUTTON_PIN);
     fakeit::When(Method(mock, doMillis)).Return(initial_millis);
     fakeit::When(Method(mock, doDigitalRead)).Return(LOW);
     button.was_pressed();

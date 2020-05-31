@@ -13,6 +13,7 @@ install:
 
 script:
     - mv lib/TimerRepository/include/api_configuration_example.h lib/TimerRepository/include/api_configuration.h
+    - mv lib/TimerRepository/include/date_time_configuration_example.h lib/TimerRepository/include/date_time_configuration.h
     - mv lib/WifiManager/src/wifi_configuration_example.h lib/WifiManager/src/wifi_configuration.h
     - platformio run -e d1_mini
     - platformio test -e native

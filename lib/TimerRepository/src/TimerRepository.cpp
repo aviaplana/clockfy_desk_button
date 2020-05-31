@@ -1,19 +1,20 @@
 #include <stdlib.h>
 #include "TimerRepository.h"
 
-TimerRepository::TimerRepository(LocalDS* local, DataSource* api) {
+TimerRepository::TimerRepository(LocalDS* local, ClockfyDS* clockfy, DateTimeDS* datetime) {
     local_ds = local;
-    api_ds = api;
+    clockfy_ds = clockfy;
+    datetime_ds = datetime;
 }
 
 Project** TimerRepository::getProjects() {
     Project** projects = local_ds->getProjects();
 
     if (projects == NULL) {
-        projects = api_ds->getProjects();
+        projects = clockfy_ds->getProjects();
         local_ds->storeProjects(projects);
     }
-    
+
     return projects;
 }
 
@@ -35,7 +36,7 @@ byte TimerRepository::getNumProjects() {
 }
 
 void TimerRepository::startTimer(char* project_id) {
-    // http://worldtimeapi.org/api/timezone/Europe/Madrid
+    datetime_ds->getDateTime();
 }
 
 void TimerRepository::stopTimer(char* project_id) {
