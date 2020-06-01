@@ -5,7 +5,7 @@
 
 #include <WiFiClientSecure.h> 
 #include "ClockfyDS.h"
-#include "ApiDS.h"
+#include "../ApiDS.h"
 #include "clockfy_configuration.h"
 
 class ClockfyDSImpl: public ClockfyDS, protected ApiDS {
