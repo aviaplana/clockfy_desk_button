@@ -30,14 +30,16 @@ Connections:
 - Blue LED -> D6
 - Buttton -> D2
 
-```
-![The circuit](/circuit.jpg?raw=true)
-```
+![The circuit](/circuit.jpg)
+
 
 ## How to install it?
 Build it using the [PlatforIO IDE](https://platformio.org/). 
+
 Before burning the firmware to the MCU, 2 configuration files must be created:
+
 *lib/WifiManager/src/wifi_configuration.h* - Contains the wifi credentials.
+
 *lib/TimerRepository/include/Clockfy/clockfy_configuration.h* - contains the Clockfy API key.
 
 ## How to use it?
@@ -52,6 +54,7 @@ __Long press to stop timer.__ Again, short green blinks to indicate that everyth
 ## Apis
 
 __http://worldtimeapi.org/__ to get current datetime
+
 __https://api.clockfy.me__ to update timers.
 
 
