@@ -65,6 +65,16 @@ void ApiDS::printErrorMessage(int response_code) {
     Serial.println(response_code);
 }
 
+String ApiDS::generateBodyRequest(String* request_body) {
+    String request = "Content-Length: ";
+    request += (*request_body).length();
+    request += F("\r\n\r\n");
+    request += *request_body;
+    request += F("\r\n\r\n");
+
+    return request;
+}
+
 unsigned int ApiDS::processResponse(char* tag, char* buffer, Stream* stream) {
     if (!stream->find(tag)) return -1;
     size_t size = stream->readBytesUntil('"', buffer, 30);

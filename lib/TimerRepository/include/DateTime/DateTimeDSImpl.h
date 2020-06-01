@@ -3,7 +3,6 @@
 #include <WiFiClient.h> 
 #include "DateTimeDS.h"
 #include "ApiDs.h"
-#include "date_time_configuration.h"
 #define DEBUG_API
 
 class DateTimeDSImpl: public DateTimeDS, protected ApiDS {

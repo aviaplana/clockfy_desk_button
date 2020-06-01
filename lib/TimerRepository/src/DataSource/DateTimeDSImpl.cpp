@@ -6,8 +6,7 @@ char* DateTimeDSImpl::getDateTime() {
     WiFiClient client;
     
     if (client.connect(host, port)) {       
-        String endpoint = F("/api/timezone/");
-        endpoint += TIME_ZONE;
+        String endpoint = F("/api/timezone/Etc/UTC");
 
         String request = F("GET ");
         request += endpoint;
@@ -26,14 +25,25 @@ char* DateTimeDSImpl::getDateTime() {
         int response_code = readResponseHeaders(&client);
 
         if (response_code == 200) { 
-            char* tag = "\"datetime\":\"";
             char* datetime = (char*) malloc(30);
-            unsigned int size = processResponse(tag, datetime, (Stream*) &client);
-            
-            if (size > 0) {
-                datetime[size] = '\0';
-                return datetime;
+            if (client.find("\"datetime\":\"")) {
+                size_t size = client.readBytesUntil('+', datetime, 30);
+                
+                if (size > 0) {
+                    datetime[size] = 'Z';
+                    datetime[size+1] = '\0';
+                    
+                    #ifdef DEBUG_API
+                        Serial.printf("Current datetime is %s.\n", datetime);
+                    #endif
+
+                    return datetime;
+                }
             }
+
+            #ifdef DEBUG_API
+                Serial.println("Couldn't get response.");
+            #endif
         } else {
             printErrorMessage(response_code);
         }

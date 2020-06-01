@@ -31,22 +31,27 @@ String ClockfyDSImpl::generatePostRequest(String* endpoint, String* request_body
     String request = F("POST ");
 
     request += generateCommonRequest(endpoint);
-    request += "Content-Length: ";
-    request += (*request_body).length();
-    request += F("\r\n");
-    request += *request_body;
-    request += F("\r\n\r\n");
+    request += generateBodyRequest(request_body);
 
     return request;
 }
 
-Project** ClockfyDSImpl::getProjects() {
+String ClockfyDSImpl::generatePatchRequest(String* endpoint, String* request_body) {
+    String request = F("PATCH ");
+
+    request += generateCommonRequest(endpoint);
+    request += generateBodyRequest(request_body);
+
+    return request;
+}
+
+Project** ClockfyDSImpl::getProjects(char* workspace_id) {
     WiFiClientSecure client = getConnectedClient();
     if (client.connected()) {
         Serial.println(F("Getting projects.."));
 
         String endpoint = F("/workspaces/");
-        endpoint += API_WORKSPACE_ID;
+        endpoint += workspace_id;
         endpoint += F("/projects");
 
         String request = generateGetRequest(&endpoint);
@@ -61,7 +66,7 @@ Project** ClockfyDSImpl::getProjects() {
 
         int response_code = readResponseHeaders(&client);
         
-        if (response_code == 200) {
+        if (response_code == OK) {
             client.find("[{");
             uint8_t counter = 0;
             struct Project** projects = (struct Project**) malloc(sizeof(struct Project*) * 20);
@@ -73,6 +78,10 @@ Project** ClockfyDSImpl::getProjects() {
                     break;
                 }
 
+                #ifdef DEBUG_API
+                    printProject(projects[counter]);
+                #endif
+
                 counter++;     
             }
         
@@ -83,6 +92,67 @@ Project** ClockfyDSImpl::getProjects() {
     }
 
     return 0;
+}
+
+UserData* ClockfyDSImpl::getUserData() {
+    WiFiClientSecure client = getConnectedClient();
+    if (client.connected()) {
+        Serial.println(F("Getting user data.."));
+
+        String endpoint = F("/user");
+        String request = generateGetRequest(&endpoint);
+
+        #ifdef DEBUG_API
+            Serial.print(F("Sending request:\n"));
+            Serial.print(request);
+            Serial.print(F("\n"));
+        #endif
+
+        client.print(request);
+
+        int response_code = readResponseHeaders(&client);
+        
+        if (response_code == OK) {
+            UserData* user_data = (UserData*) malloc(sizeof(UserData));
+
+            client.find("{");
+
+            char* buffer = (char*) malloc(100);
+            char* tag = (char*) malloc(30);
+            strcpy(tag, "\"userId\":\"");
+            int size = processResponse(tag, buffer,  (Stream*) &client);
+
+            if (size < 1) return 0;
+            strncpy(user_data->user_id, buffer, size);
+            user_data->user_id[size] = '\0';
+
+
+            strcpy(tag, "\"activeWorkspace\":\"");
+            size = processResponse(tag, buffer,  (Stream*) &client);
+
+            if (size < 1) return 0;
+            strncpy(user_data->workspace_id, buffer, size);
+            user_data->workspace_id[size] = '\0';
+        
+            return user_data;
+        } else {
+            printErrorMessage(response_code);
+        }
+    }
+
+    return 0;
+}
+
+void ClockfyDSImpl::printProject(Project* project) {
+    Serial.print(project->id);
+    Serial.print("\t");
+    Serial.print(project->name);
+    Serial.print(F("\tR:"));
+    Serial.print(project->color.red);
+    Serial.print(F("\tG:"));
+    Serial.print(project->color.red);
+    Serial.print(F("\tB:"));
+    Serial.print(project->color.red);
 }
 
 Project* ClockfyDSImpl::parseResponse(Stream* stream) {
@@ -178,19 +248,19 @@ BearSSL::WiFiClientSecure ClockfyDSImpl::getConnectedClient() {
     return httpsClient;
 }
 
-char* ClockfyDSImpl::startTimer(char* project_id, char* start_time) {
+bool ClockfyDSImpl::startTimer(char* project_id, char* workspace_id, char* start_time) {
     WiFiClientSecure client = getConnectedClient();
     
     if (client.connected()) {
         Serial.println(F("Starting timer..."));
         String endpoint = F("/workspaces/");
-        endpoint += API_WORKSPACE_ID;
+        endpoint += workspace_id;
         endpoint += F("/time-entries");
-        String request_body = F("{\"start\":"); 
+        String request_body = F("{\"start\":\""); 
         request_body += start_time;
-        request_body += F("\"projectId\":");
+        request_body += F("\",\"projectId\":\"");
         request_body += project_id;
-        request_body += F("}");
+        request_body += F("\"}");
 
         String request = generatePostRequest(&endpoint, &request_body);
 
@@ -203,7 +273,7 @@ char* ClockfyDSImpl::startTimer(char* project_id, char* start_time) {
         client.print(request);
         int response_code = readResponseHeaders(&client);
 
-        if (response_code == 201) {
+        if (response_code == CREATED) {
             char* buffer = (char*) malloc(100);
             char* tag = (char*) malloc(30);
             strcpy(tag, "\"id\":\"");
@@ -213,17 +283,63 @@ char* ClockfyDSImpl::startTimer(char* project_id, char* start_time) {
             strncpy(id, buffer, size);
             id[size] = '\0';
             
+            #ifdef DEBUG_API
+                Serial.print(F("Timer id: "));
+                Serial.print(id);
+                Serial.print(F("\n"));
+            #endif
+
             free(buffer);
             free(tag);
 
-            return id;
+            return true;
         } else {
             printErrorMessage(response_code);
         }
-
     }
+    return false;
+}
 
-    return "";
+bool ClockfyDSImpl::stopTimer(char* stop_time, char* user_id, char* workspace_id) {
+    WiFiClientSecure client = getConnectedClient();
+    
+    if (client.connected()) {
+        Serial.println(F("Stopping timer..."));
+        String endpoint = F("/workspaces/");
+        endpoint += workspace_id;
+        endpoint += F("/user/");
+        endpoint += user_id;
+        endpoint += F("/time-entries");
+        String request_body = F("{\"end\":\""); 
+        request_body += stop_time;
+        request_body += F("\"}");
+
+        String request = generatePatchRequest(&endpoint, &request_body);
+
+        #ifdef DEBUG_API
+            Serial.print(F("Sending request:\n"));
+            Serial.print(request);
+            Serial.print(F("\n"));
+        #endif
+
+        client.print(request);
+        int response_code = readResponseHeaders(&client);
+
+        if (response_code == OK) {
+            String response = getResponseBody((Stream*) &client);
+            
+            #ifdef DEBUG_API
+                Serial.print(F("Success. Response:\n"));
+                Serial.print(response);
+                Serial.print(F("\n"));
+            #endif
+            
+            return true;
+        } else {
+            printErrorMessage(response_code);
+        }
+    }
+    return false;
 }
 
 #endif

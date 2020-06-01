@@ -27,7 +27,7 @@ TimerRepository timer_repository {&local_ds, &clockfy_ds, &datetime_ds};
 
 byte num_projects = 0;
 byte current_project = 0;
-char* timer_id = "";
+bool is_timer_running = false;
 
 void connect_wifi() {
   wifi.setup();
@@ -44,48 +44,18 @@ void connect_wifi() {
   Serial.println("connected");  
 }
 
-void testing(Color current_color, Color color) {
-  float red_diff = (float) current_color.red - (float) color.red;
-    float red_step = red_diff / (float) 100;
-    float red = (float) current_color.red;
-      Serial.printf("current:\tR:%d\tG:%d\tB:%d\n", current_color.red, current_color.green, current_color.blue);
-      Serial.printf("Target\tR:%d\tG:%d\tB:%d\n", color.red, color.green, color.blue);
-
-    Serial.printf("red: %f, %f, %f\n", red_diff, red_step, red);
-
-    float green_diff = (float) current_color.green - (float) color.green;
-    float green_step = green_diff / (float) 100;
-    float green = (float) current_color.green;
-
-    float blue_diff = (float) current_color.blue - (float) color.blue;
-    float blue_step = blue_diff / (float) 100;
-    float blue = (float) current_color.blue;
-
-
-    for (unsigned long i = 0; i <= 100; i++) {
-        red -= red_step;
-        green -= green_step;
-        blue -= blue_step;
-
-        current_color.red = (byte) red;
-        current_color.green = (byte) green;
-        current_color.blue = (byte) blue;
-        Serial.printf("\tR:%d\tG:%d\tB:%d\n", current_color.red, current_color.green, current_color.blue);
-        delay(1);
+void change_project() {
+  if (!is_timer_running) {
+    current_project++;
+    
+    if (current_project >= num_projects) {
+      current_project = 0;
     }
 
-}
+    Project* project = timer_repository.getProjectPositon(current_project);
 
-void change_project() {
-  current_project++;
-  
-  if (current_project >= num_projects) {
-    current_project = 0;
+    lamp.change_fading_short(project->color);
   }
-
-  Project* project = timer_repository.getProjectPositon(current_project);
-
-  lamp.change_fading_short(project->color);
 }
 
 void setup() {
@@ -101,10 +71,26 @@ void setup() {
 }
 
 void stop_timer() {
+  if (timer_repository.stopTimer()) {
+    is_timer_running = false;
+    Serial.println("Timmer stopped");
+    lamp.success_blink();
+  } else {
+    Serial.println("Failed to stop timmer");
+    lamp.error_blink();
+  }
 }
 
 void start_timer(char* project_id) {
-  timer_id = timer_repository.startTimer(project_id);
+  is_timer_running = timer_repository.startTimer(project_id);
+
+  if (is_timer_running) {
+    Serial.println("Timer started.");
+    lamp.success_blink();
+  } else {
+    Serial.println("Failed to start timer.\n");
+    lamp.error_blink();
+  }
 }
 
 void start_stop_timer() {
@@ -113,10 +99,10 @@ void start_stop_timer() {
   if (project != NULL) {
     lamp.short_blink();
     
-    if (timer_id == "") {
-      start_timer(project->id);
-    } else {
+    if (is_timer_running) {
       stop_timer();
+    } else {
+      start_timer(project->id);
     }
   }
 }
