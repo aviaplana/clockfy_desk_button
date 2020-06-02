@@ -74,7 +74,7 @@ void stop_timer() {
   if (timer_repository.stopTimer()) {
     is_timer_running = false;
     Serial.println("Timmer stopped");
-    lamp.success_blink();
+    lamp.stop_breathing();
   } else {
     Serial.println("Failed to stop timmer");
     lamp.error_blink();
@@ -86,7 +86,7 @@ void start_timer(char* project_id) {
 
   if (is_timer_running) {
     Serial.println("Timer started.");
-    lamp.success_blink();
+    lamp.start_breathing();
   } else {
     Serial.println("Failed to start timer.\n");
     lamp.error_blink();
@@ -108,6 +108,10 @@ void start_stop_timer() {
 }
 
 void loop() {
+  if (is_timer_running) {
+    lamp.breath();
+  }
+  
   switch (button.was_pressed()) {
     case SHORT_PRESS:
       change_project();

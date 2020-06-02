@@ -27,26 +27,26 @@ void Lamp::change_fading_short(Color color) {
 
 void Lamp::change_fading(Color color, unsigned long duration) {
     float red_diff = current_color.red - color.red;
-    float red_step = red_diff / (float) duration;
-    float red = current_color.red;
+    fade_step.red = red_diff / (float) duration;
+    temp_fade_color.red = current_color.red;
 
     float green_diff = current_color.green - color.green;
-    float green_step = green_diff / (float) duration;
-    float green = current_color.green;
+    fade_step.green = green_diff / (float) duration;
+    temp_fade_color.green = current_color.green;
 
     float blue_diff = current_color.blue - color.blue;
-    float blue_step = blue_diff / (float) duration;
-    float blue = current_color.blue;
+    fade_step.blue = blue_diff / (float) duration;
+    temp_fade_color.blue = current_color.blue;
 
 
     for (unsigned long i = 0; i < duration; i++) {
-        red -= red_step;
-        green -= green_step;
-        blue -= blue_step;
+        temp_fade_color.red -= fade_step.red;
+        temp_fade_color.green -= fade_step.green;
+        temp_fade_color.blue -= fade_step.blue;
 
-        current_color.red = (byte) red;
-        current_color.green = (byte) green;
-        current_color.blue = (byte) blue;
+        current_color.red = (byte) temp_fade_color.red;
+        current_color.green = (byte) temp_fade_color.green;
+        current_color.blue = (byte) temp_fade_color.blue;
         change_color(current_color);
 
         arduino_manager->doDelay(1);
@@ -93,6 +93,52 @@ void Lamp::error_blink() {
     }
 
     change_fading_short(current);
+}
+
+void Lamp::start_breathing() {
+    temp_fade_color.red = current_color.red;
+    temp_fade_color.green = current_color.green;
+    temp_fade_color.blue = current_color.blue;
+
+    float duration = (float) breath_duration;
+    fade_step.red = temp_fade_color.red  / duration;
+    fade_step.green = temp_fade_color.green  / duration;
+    fade_step.blue = temp_fade_color.blue  / duration;
+
+    millis_fade_started = arduino_manager->doMillis();
+}
+
+void Lamp::stop_breathing() {
+    change_color(current_color);
+}
+
+void Lamp::change_color_precision(ColorPrecision color) {
+    arduino_manager->doAnalogWrite(red_led_pin, (byte) color.red);
+    arduino_manager->doAnalogWrite(green_led_pin, (byte) color.green);
+    arduino_manager->doAnalogWrite(blue_led_pin, (byte) color.blue);
+}
+
+void Lamp::breath(){
+    temp_fade_color.red -= fade_step.red;
+    temp_fade_color.green -= fade_step.green;
+    temp_fade_color.blue -= fade_step.blue;
+
+    unsigned long diff_millis = arduino_manager->doMillis() - millis_fade_started;
+
+    if (diff_millis > (breath_duration * 2)) {
+        millis_fade_started = arduino_manager->doMillis();
+    } else {
+        if (diff_millis < breath_duration) {
+            diff_millis = breath_duration - diff_millis; 
+        } else {
+            diff_millis -= breath_duration; 
+        }
+
+        temp_fade_color.red = fade_step.red * diff_millis;
+        temp_fade_color.green = fade_step.green * diff_millis;
+        temp_fade_color.blue = fade_step.blue * diff_millis;
+        change_color_precision(temp_fade_color);
+    }
 }
 
 Color Lamp::get_color() {

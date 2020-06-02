@@ -10,4 +10,10 @@ typedef struct Color {
         byte blue;
 } Color;
 
+typedef struct ColorPrecision {
+        float red;
+        float green;
+        float blue;
+} ColorPrecision;
+
 #endif
