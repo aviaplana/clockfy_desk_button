@@ -75,6 +75,7 @@ void stop_timer() {
     is_timer_running = false;
     Serial.println("Timmer stopped");
     lamp.stop_breathing();
+    lamp.success_blink();
   } else {
     Serial.println("Failed to stop timmer");
     lamp.error_blink();
