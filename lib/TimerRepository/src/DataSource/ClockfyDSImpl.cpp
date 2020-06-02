@@ -153,7 +153,7 @@ void ClockfyDSImpl::printProject(Project* project) {
     Serial.print(F("\tG:"));
     Serial.print(project->color.red);
     Serial.print(F("\tB:"));
-    Serial.print(project->color.red);
+    Serial.println(project->color.red);
 }
 
 Project* ClockfyDSImpl::parseResponse(Stream* stream) {
@@ -197,7 +197,7 @@ Project* ClockfyDSImpl::parseResponse(Stream* stream) {
 }
 
 Color ClockfyDSImpl::hexToColor(char* hex) {
-    Color color;
+    Color color {0, 0, 0};
 
     char* part = (char*) malloc(2);
     strncpy(part, hex + 1, 2);
@@ -210,7 +210,6 @@ Color ClockfyDSImpl::hexToColor(char* hex) {
     color.blue = (byte) strtol(part, NULL, 16);
 
     return color;
-
 }
 
 BearSSL::WiFiClientSecure ClockfyDSImpl::getConnectedClient() {
@@ -223,8 +222,7 @@ BearSSL::WiFiClientSecure ClockfyDSImpl::getConnectedClient() {
     #endif
 
     WiFiClientSecure httpsClient;
-    //sincronizeTime();
-
+    
     // Load root certificate in DER format into WiFiClientSecure object
     bool res = httpsClient.setCACert(root_ca_certificate, CLOCKFY_CERTIFICATE_LENGTH);
 

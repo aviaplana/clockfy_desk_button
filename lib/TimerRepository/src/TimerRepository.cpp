@@ -88,7 +88,7 @@ bool TimerRepository::startTimer(char* project_id) {
     char* date_time = datetime_ds->getDateTime();
     char* workspace_id = getWorkspaceId();
 
-    if (date_time != "" && workspace_id != NULL) {
+    if (date_time != NULL && workspace_id != NULL) {
         return clockfy_ds->startTimer(project_id, workspace_id, date_time);
     } else {
         return false;
@@ -100,7 +100,7 @@ bool TimerRepository::stopTimer() {
     char* user_id = getUserId();
     char* workspace_id = getWorkspaceId();
 
-    if (date_time != "" && user_id != NULL && workspace_id != NULL) {
+    if (date_time != NULL && user_id != NULL && workspace_id != NULL) {
         return clockfy_ds->stopTimer(date_time, user_id, workspace_id);
     } else {
         return false;
