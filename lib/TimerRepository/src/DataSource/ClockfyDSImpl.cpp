@@ -135,6 +135,10 @@ UserData* ClockfyDSImpl::getUserData() {
             strncpy(user_data->workspace_id, buffer, size);
             user_data->workspace_id[size] = '\0';
         
+            #ifdef DEBUG_API
+                Serial.print(F("\n"));
+            #endif
+
             return user_data;
         } else {
             printErrorMessage(response_code);
@@ -163,7 +167,7 @@ Project* ClockfyDSImpl::parseResponse(Stream* stream) {
     char* tag = (char*) malloc(30);
     strcpy(tag, "\"id\":\"");
     int size = processResponse(tag, buffer, stream);
-
+    
     if (size < 1) return 0;
     strncpy(project->id, buffer, size);
     project->id[size] = '\0';

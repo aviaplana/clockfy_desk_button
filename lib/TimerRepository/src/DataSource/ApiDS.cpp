@@ -19,6 +19,7 @@ int ApiDS::readResponseHeaders(WiFiClient* client) {
         Serial.printf("%d ", code);
     #endif
     
+    client->setTimeout(100);
     while (client->connected()) {
         String line = client->readStringUntil('\n');
 
