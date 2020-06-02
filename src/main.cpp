@@ -61,10 +61,10 @@ void change_project() {
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting up...");
-
   lamp.setup();
   button.setup();
   connect_wifi();
+  datetime_ds.synchronize();
 
   num_projects = timer_repository.getNumProjects();
   change_project();

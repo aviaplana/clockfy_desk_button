@@ -16,7 +16,6 @@ class ClockfyDSImpl: public ClockfyDS, protected ApiDS {
         bool stopTimer(char* stop_time, char* user_id, char* workspace_id);        
         UserData* getUserData();
 
-
     private:
         BearSSL::WiFiClientSecure getConnectedClient();
         String generateGetRequest(String* endpoint);
@@ -26,14 +25,13 @@ class ClockfyDSImpl: public ClockfyDS, protected ApiDS {
         Project* parseResponse(Stream* stream);
         Color hexToColor(char* hex);
         void printProject(Project* project);
-
+        void sincronizeTime();
 
         const char* host = "api.clockify.me";
         const char* endpoint_prefix = "/api/v1";
         const int port = 443;
         const unsigned int max_retry = 10;
         const unsigned long timeout = 15000;
-        const char* fingerprint = "31 93 65 09 B6 5C 0E E6 39 85 8E C8 DF 98 5C 58 97 F1 08 85";
 };
 
 #endif

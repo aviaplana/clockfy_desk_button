@@ -4,6 +4,7 @@
 class DateTimeDS {
     public:
         virtual char* getDateTime() = 0;
+        virtual void synchronize() = 0;
 };
 
 #endif

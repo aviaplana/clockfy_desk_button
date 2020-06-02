@@ -1,5 +1,6 @@
 #ifndef UNIT_TEST
 #include "Clockfy/ClockfyDSImpl.h"
+#include "Clockfy/clockfy_certificate.h"
 
 ClockfyDSImpl::ClockfyDSImpl() {
 
@@ -222,10 +223,21 @@ BearSSL::WiFiClientSecure ClockfyDSImpl::getConnectedClient() {
     #endif
 
     WiFiClientSecure httpsClient;
-    httpsClient.setFingerprint(fingerprint);
+    //sincronizeTime();
+
+    // Load root certificate in DER format into WiFiClientSecure object
+    bool res = httpsClient.setCACert(root_ca_certificate, CLOCKFY_CERTIFICATE_LENGTH);
+
+    if (!res) {
+        Serial.println("Failed to load root CA certificate!");
+
+        while (true) {
+            yield();
+        }
+    }
+
     httpsClient.setTimeout(timeout); // 15 Seconds
     delay(100);
-
     unsigned int retry_counter = 0; //retry counter
     httpsClient.connect(host, port);
     
