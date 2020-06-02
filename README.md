@@ -17,7 +17,7 @@ I found myself using the clockfy webapp to start timers, but I kept on forgettin
   
 ## How to build the circuit?
 Components needed:
-- 3x 100ohm resistors.
+- 3x 82ohm resistors.
 - Blue LED
 - Red LED
 - Green LED
