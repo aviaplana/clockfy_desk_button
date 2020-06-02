@@ -53,8 +53,6 @@ __Long press to stop timer.__ Again, short green blinks to indicate that everyth
 
 ## Apis
 
-__http://worldtimeapi.org/__ to get current datetime
-
 __https://api.clockfy.me__ to update timers.
 
 
