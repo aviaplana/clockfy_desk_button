@@ -64,7 +64,7 @@ void setup() {
   lamp.setup();
   button.setup();
   connect_wifi();
-  datetime_ds.synchronize();
+  timer_repository.begin();
 
   num_projects = timer_repository.getNumProjects();
   change_project();

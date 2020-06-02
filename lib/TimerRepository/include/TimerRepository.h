@@ -10,6 +10,7 @@
 class TimerRepository {
     public:
         TimerRepository(LocalDS* local, ClockfyDS* clockfy_ds, DateTimeDS* datetime_ds);
+        void begin();
         Project** getProjects();
         bool startTimer(char* project_id);
         bool stopTimer();

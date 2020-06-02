@@ -7,6 +7,10 @@ TimerRepository::TimerRepository(LocalDS* local, ClockfyDS* clockfy, DateTimeDS*
     datetime_ds = datetime;
 }
 
+void TimerRepository::begin() {
+    datetime_ds->synchronize();
+}
+
 Project** TimerRepository::getProjects() {
     Project** projects = local_ds->getProjects();
 
