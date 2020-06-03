@@ -63,9 +63,9 @@ void ClockfyDSImpl::printProject(Project* project) {
     Serial.print(F("\tR:"));
     Serial.print(project->color.red);
     Serial.print(F("\tG:"));
-    Serial.print(project->color.red);
+    Serial.print(project->color.green);
     Serial.print(F("\tB:"));
-    Serial.println(project->color.red);
+    Serial.println(project->color.blue);
 }
 
 void ClockfyDSImpl::printResponsePart(char* tag, char* buffer, size_t long_bytes) {
