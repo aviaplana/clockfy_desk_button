@@ -125,7 +125,7 @@ void start_stop_timer() {
 
 void loop() {
   if (is_timer_running) {
-    lamp.breath();
+    lamp.breathe();
   }
   
   switch (button.was_pressed()) {
