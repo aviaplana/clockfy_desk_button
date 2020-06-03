@@ -1,10 +1,10 @@
 #if !defined(DATE_TIME_IMPL_H) && !defined(UNIT_TEST)
 #define DATE_TIME_IMPL_H
 #include "DateTimeDS.h"
-#include "ApiDS.h"
+#include "Arduino.h"
 #define DEBUG_API
 
-class DateTimeDSImpl: public DateTimeDS, protected ApiDS {
+class DateTimeDSImpl: public DateTimeDS {
     public:
         char* getDateTime();
         void synchronize();
