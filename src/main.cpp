@@ -14,6 +14,7 @@
 #define GREEN_LED_PIN D7
 #define BLUE_LED_PIN D6
 #define BUTTON_PIN D2
+#define SYNC_INTERVAL 10000
 
 WifiManager wifi;
 ArduinoManager arduino_manager {};
@@ -28,6 +29,8 @@ TimerRepository timer_repository {&local_ds, &clockfy_ds, &datetime_ds};
 byte num_projects = 0;
 byte current_project = 0;
 bool is_timer_running = false;
+bool waiting_for_response = false;
+unsigned long last_sync = 0;
 
 void connect_wifi() {
   wifi.setup();
@@ -36,7 +39,7 @@ void connect_wifi() {
   Serial.print(F("Connecting to the wifi "));
   Serial.print(wifi.getSSID());
 
-  while (!wifi.is_connected()) {
+  while (!wifi.isConnected()) {
     Serial.print(F("."));
     delay(200);
   }
@@ -59,13 +62,19 @@ void change_project() {
 }
 
 void synchronize() {
-Project* project = timer_repository.getRunningProject();
+  last_sync = millis();
 
-  if (project != NULL) {
+  Project* project = timer_repository.getRunningProject();
+
+  if (project != NULL && !is_timer_running) {
     Serial.println(F("There's a timer running!"));
     is_timer_running = true;
     lamp.change_fading_short(project->color);
     lamp.start_breathing();
+  } else if (project == NULL && is_timer_running) {
+      Serial.println(F("Timer stopped!"));
+      is_timer_running = false;
+      lamp.stop_breathing();
   }
 }
 
@@ -78,11 +87,7 @@ void setup() {
   timer_repository.begin();
 
   num_projects = timer_repository.getNumProjects();
-  synchronize();
-
-  if (!is_timer_running) {
-    change_project();
-  }
+  change_project();
 }
 
 void stop_timer() {
@@ -124,6 +129,10 @@ void start_stop_timer() {
 }
 
 void loop() {
+  if (millis() - last_sync > SYNC_INTERVAL) {
+    synchronize();
+  }
+
   if (is_timer_running) {
     lamp.breathe();
   }

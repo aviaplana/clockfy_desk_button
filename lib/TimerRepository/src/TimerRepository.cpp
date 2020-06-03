@@ -117,11 +117,12 @@ Project* TimerRepository::getRunningProject() {
 
     if (user_id != NULL && workspace_id != NULL) {
         char* project_id = clockfy_ds->getCurrentTimer(user_id, workspace_id);
-        return getProject(project_id);
-    } else {
-        return NULL;
+        if (project_id != NULL) {
+            return getProject(project_id);
+        }
     }
     
+    return NULL;    
 }
 
 bool TimerRepository::stopTimer() {

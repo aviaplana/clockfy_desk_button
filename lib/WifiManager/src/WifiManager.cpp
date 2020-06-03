@@ -20,7 +20,7 @@ void WifiManager::connect() {
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 }
 
-bool WifiManager::is_connected() {
+bool WifiManager::isConnected() {
     return WiFi.status() == WL_CONNECTED;
 }
 

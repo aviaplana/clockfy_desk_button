@@ -8,7 +8,7 @@ class WifiManager {
         WifiManager();
         void setup();
         void connect();
-        bool is_connected();
+        bool isConnected();
         const char* getSSID();
 };
 
