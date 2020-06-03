@@ -8,21 +8,25 @@ class Lamp {
     public:
         Lamp(ArduinoInterface* arduino_manager, byte red, byte green, byte blue);
         void setup();
-        void change_color(Color color);
-        void change_fading_short(Color color);
-        void change_fading(Color color, unsigned long duration);
-        Color get_color();
-        void short_blink();
-        void long_blink();
-        void success_blink();
-        void error_blink();
+        void changeColor(Color color);
+        void changeFadingShort(Color color);
+        void changeFading(Color color, unsigned long duration);
+        Color getColor();
+        void shortBlink();
+        void longBlink();
+        void successBlink();
+        void errorBlink();
         void breathe();
-        void start_breathing();
-        void stop_breathing();
-        
+        void startBreathing();
+        void stopBreathing();
+        bool isPaused();
+        void resumeBreathing();
+        void pauseBreating();
+        bool breatheCycleJustStarted();
+
     private:
         void blink(unsigned long millis);
-        void change_color_precision(ColorPrecision color);
+        void changeColorPrecision(ColorPrecision color);
 
         const unsigned long breathe_half_duration = 3000;
         const unsigned long fast_blink_millis = 100;
@@ -36,6 +40,8 @@ class Lamp {
         ColorPrecision temp_fade_color = {0.0f, .0f, 0.0f};
         ColorPrecision fade_step = {0.0f, .0f, 0.0f};
         unsigned long millis_fade_started = 0;
+        unsigned long millis_breathing_paused = 0;
+        bool is_paused = false;
 };
 
 #endif

@@ -16,7 +16,7 @@ void test_red(void) {
     Color red = {1, 0, 0};
 
     // When
-    lamp.change_color(red);
+    lamp.changeColor(red);
 
     // Then
     TEST_ASSERT_EQUAL(HIGH, mockArduino.doDigitalRead(RED_LED_PIN));
@@ -29,7 +29,7 @@ void test_blue(void) {
     Color blue = {0, 0, 1};
 
     // When
-    lamp.change_color(blue);
+    lamp.changeColor(blue);
 
     // Then
     TEST_ASSERT_EQUAL(LOW, mockArduino.doDigitalRead(RED_LED_PIN));
@@ -42,30 +42,26 @@ void test_green(void) {
     Color green = {0, 1, 0};
 
     // When
-    lamp.change_color(green);
+    lamp.changeColor(green);
 
     // Then
     TEST_ASSERT_EQUAL(LOW, mockArduino.doDigitalRead(RED_LED_PIN));
     TEST_ASSERT_EQUAL(HIGH, mockArduino.doDigitalRead(GREEN_LED_PIN));
     TEST_ASSERT_EQUAL(LOW, mockArduino.doDigitalRead(BLUE_LED_PIN));
-
 }
-
 
 void test_mixed(void) {
     // Given
     Color color = {200, 100, 50};
 
     // When
-    lamp.change_color(color);
+    lamp.changeColor(color);
 
     // Then
     TEST_ASSERT_EQUAL(color.red, mockArduino.doAnalogRead(RED_LED_PIN));
     TEST_ASSERT_EQUAL(color.green, mockArduino.doAnalogRead(GREEN_LED_PIN));
     TEST_ASSERT_EQUAL(color.blue, mockArduino.doAnalogRead(BLUE_LED_PIN));
-
 }
-
 
 void run_lamp_tests() {
     lamp.setup();

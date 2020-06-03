@@ -18,7 +18,7 @@ void test_no_press(void) {
     fakeit::When(Method(mock, doDigitalRead)).Return(LOW);
 
     // Then
-    TEST_ASSERT_EQUAL_MESSAGE(NO_PRESS, button.was_pressed(), "Should be NO_PRESS");
+    TEST_ASSERT_EQUAL_MESSAGE(NO_PRESS, button.wasPressed(), "Should be NO_PRESS");
 }
 
 void test_short_press(void) {
@@ -28,14 +28,14 @@ void test_short_press(void) {
     Button button = Button(&mock.get(), BUTTON_PIN);
     fakeit::When(Method(mock, doMillis)).Return(initial_millis);
     fakeit::When(Method(mock, doDigitalRead)).Return(LOW);
-    button.was_pressed();
+    button.wasPressed();
 
     // When
     fakeit::When(Method(mock, doMillis)).Return(initial_millis + 100);
     fakeit::When(Method(mock, doDigitalRead)).Return(HIGH);
 
     // Then
-    TEST_ASSERT_EQUAL_MESSAGE(SHORT_PRESS, button.was_pressed(), "Should be SHORT_PRESS");
+    TEST_ASSERT_EQUAL_MESSAGE(SHORT_PRESS, button.wasPressed(), "Should be SHORT_PRESS");
 }
 
 void test_long_press(void) {
@@ -45,14 +45,14 @@ void test_long_press(void) {
     Button button = Button(&mock.get(), BUTTON_PIN);
     fakeit::When(Method(mock, doMillis)).Return(initial_millis);
     fakeit::When(Method(mock, doDigitalRead)).Return(LOW);
-    button.was_pressed();
+    button.wasPressed();
 
     // When
     fakeit::When(Method(mock, doMillis)).Return(initial_millis + 600);
     fakeit::When(Method(mock, doDigitalRead)).Return(HIGH);
 
     // Then
-    TEST_ASSERT_EQUAL_MESSAGE(LONG_PRESS, button.was_pressed(), "Should be LONG_PRESS");
+    TEST_ASSERT_EQUAL_MESSAGE(LONG_PRESS, button.wasPressed(), "Should be LONG_PRESS");
 }
 
 void run_button_tests() {

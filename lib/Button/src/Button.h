@@ -10,7 +10,7 @@ class Button {
     public:
         Button(ArduinoInterface* arduino_manager, byte pin);
         void setup();
-        press_type was_pressed();
+        press_type wasPressed();
 
     private:
         ArduinoInterface* arduino_manager;

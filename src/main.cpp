@@ -57,7 +57,7 @@ void change_project() {
 
     Project* project = timer_repository.getProjectPositon(current_project);
 
-    lamp.change_fading_short(project->color);
+    lamp.changeFadingShort(project->color);
   }
 }
 
@@ -69,12 +69,12 @@ void synchronize() {
   if (project != NULL && !is_timer_running) {
     Serial.println(F("There's a timer running!"));
     is_timer_running = true;
-    lamp.change_fading_short(project->color);
-    lamp.start_breathing();
+    lamp.changeFadingShort(project->color);
+    lamp.startBreathing();
   } else if (project == NULL && is_timer_running) {
       Serial.println(F("Timer stopped!"));
       is_timer_running = false;
-      lamp.stop_breathing();
+      lamp.stopBreathing();
   }
 }
 
@@ -94,11 +94,11 @@ void stop_timer() {
   if (timer_repository.stopTimer()) {
     is_timer_running = false;
     Serial.println(F("Timmer stopped"));
-    lamp.stop_breathing();
-    lamp.success_blink();
+    lamp.stopBreathing();
+    lamp.successBlink();
   } else {
     Serial.println(F("Failed to stop timmer"));
-    lamp.error_blink();
+    lamp.errorBlink();
   }
 }
 
@@ -107,10 +107,10 @@ void start_timer(char* project_id) {
 
   if (is_timer_running) {
     Serial.println(F("Timer started."));
-    lamp.start_breathing();
+    lamp.startBreathing();
   } else {
     Serial.println(F("Failed to start timer.\n"));
-    lamp.error_blink();
+    lamp.errorBlink();
   }
 }
 
@@ -118,7 +118,7 @@ void start_stop_timer() {
   Project* project = timer_repository.getProjectPositon(current_project);
   
   if (project != NULL) {
-    lamp.short_blink();
+    lamp.shortBlink();
     
     if (is_timer_running) {
       stop_timer();
@@ -129,15 +129,21 @@ void start_stop_timer() {
 }
 
 void loop() {
-  if (millis() - last_sync > SYNC_INTERVAL) {
+  bool should_sync = millis() - last_sync > SYNC_INTERVAL;
+  
+  if (is_timer_running) {
+    lamp.breathe();
+    if (should_sync && lamp.breatheCycleJustStarted()) {
+      lamp.pauseBreating();
+      synchronize();
+      lamp.resumeBreathing();
+    }
+  } else if (should_sync) {
     synchronize();
   }
 
-  if (is_timer_running) {
-    lamp.breathe();
-  }
   
-  switch (button.was_pressed()) {
+  switch (button.wasPressed()) {
     case SHORT_PRESS:
       change_project();
       break;

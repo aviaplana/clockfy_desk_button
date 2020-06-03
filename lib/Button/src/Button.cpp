@@ -6,7 +6,7 @@ void Button::setup() {
     arduino_manager->doPinMode(pin, INPUT_PULLUP);
 }
 
-press_type Button::was_pressed() {
+press_type Button::wasPressed() {
     press_type press = NO_PRESS;
     if (arduino_manager->doDigitalRead(pin) == LOW) {
         
