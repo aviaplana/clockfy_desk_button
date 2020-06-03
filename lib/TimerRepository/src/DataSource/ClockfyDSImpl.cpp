@@ -363,7 +363,7 @@ char* ClockfyDSImpl::getCurrentTimer(char* user_id, char* workspace_id) {
     WiFiClientSecure client = getConnectedClient();
     
     if (client.connected()) {
-        Serial.println(F("Stopping timer..."));
+        Serial.println(F("Checking if there's a timer running..."));
         String endpoint = F("/workspaces/");
         endpoint += workspace_id;
         endpoint += F("/user/");
