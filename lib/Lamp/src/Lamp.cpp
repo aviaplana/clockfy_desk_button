@@ -100,7 +100,7 @@ void Lamp::start_breathing() {
     temp_fade_color.green = current_color.green;
     temp_fade_color.blue = current_color.blue;
 
-    float duration = (float) breathe_duration;
+    float duration = (float) breathe_half_duration;
     fade_step.red = temp_fade_color.red  / duration;
     fade_step.green = temp_fade_color.green  / duration;
     fade_step.blue = temp_fade_color.blue  / duration;
@@ -118,6 +118,7 @@ void Lamp::change_color_precision(ColorPrecision color) {
     arduino_manager->doAnalogWrite(blue_led_pin, (byte) color.blue);
 }
 
+
 void Lamp::breathe(){
     temp_fade_color.red -= fade_step.red;
     temp_fade_color.green -= fade_step.green;
@@ -125,13 +126,16 @@ void Lamp::breathe(){
 
     unsigned long diff_millis = arduino_manager->doMillis() - millis_fade_started;
 
-    if (diff_millis > (breathe_duration * 2)) {
+    // Full breathe done. Set millis to repeat the process.
+    if (diff_millis > (breathe_half_duration * 2)) {
         millis_fade_started = arduino_manager->doMillis();
     } else {
-        if (diff_millis < breathe_duration) {
-            diff_millis = breathe_duration - diff_millis; 
+        // Light is fading
+        if (diff_millis < breathe_half_duration) {
+            diff_millis = breathe_half_duration - diff_millis; 
+        // Light is increasing intensity
         } else {
-            diff_millis -= breathe_duration; 
+            diff_millis -= breathe_half_duration; 
         }
 
         temp_fade_color.red = fade_step.red * diff_millis;

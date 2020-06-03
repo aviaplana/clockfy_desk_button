@@ -24,7 +24,7 @@ class Lamp {
         void blink(unsigned long millis);
         void change_color_precision(ColorPrecision color);
 
-        const unsigned long breathe_duration = 3000;
+        const unsigned long breathe_half_duration = 3000;
         const unsigned long fast_blink_millis = 100;
         const unsigned long short_blink_millis = 200;
         const unsigned long long_blink_millis = 500;
