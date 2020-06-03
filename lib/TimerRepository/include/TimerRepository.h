@@ -16,7 +16,7 @@ class TimerRepository {
         bool stopTimer();
         Project* getProjectPositon(byte position);
         byte getNumProjects();
-
+        Project* getRunningProject();
 
     private:
         LocalDS* local_ds;
@@ -25,6 +25,7 @@ class TimerRepository {
 
         bool loadUserData();
         char* getWorkspaceId();
+        Project* getProject(char* id);
         char* getUserId();
 };
 

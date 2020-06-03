@@ -33,15 +33,15 @@ void connect_wifi() {
   wifi.setup();
   wifi.connect();
 
-  Serial.print("Connecting to the wifi ");
+  Serial.print(F("Connecting to the wifi "));
   Serial.print(wifi.getSSID());
 
   while (!wifi.is_connected()) {
-    Serial.print(".");
+    Serial.print(F("."));
     delay(200);
   }
 
-  Serial.println("connected");  
+  Serial.println(F("connected"));  
 }
 
 void change_project() {
@@ -58,26 +58,41 @@ void change_project() {
   }
 }
 
+void synchronize() {
+Project* project = timer_repository.getRunningProject();
+
+  if (project != NULL) {
+    Serial.println(F("There's a timer running!"));
+    is_timer_running = true;
+    lamp.change_fading_short(project->color);
+    lamp.start_breathing();
+  }
+}
+
 void setup() {
   Serial.begin(115200);
-  Serial.println("Booting up...");
+  Serial.println(F("Booting up..."));
   lamp.setup();
   button.setup();
   connect_wifi();
   timer_repository.begin();
 
   num_projects = timer_repository.getNumProjects();
-  change_project();
+  synchronize();
+
+  if (!is_timer_running) {
+    change_project();
+  }
 }
 
 void stop_timer() {
   if (timer_repository.stopTimer()) {
     is_timer_running = false;
-    Serial.println("Timmer stopped");
+    Serial.println(F("Timmer stopped"));
     lamp.stop_breathing();
     lamp.success_blink();
   } else {
-    Serial.println("Failed to stop timmer");
+    Serial.println(F("Failed to stop timmer"));
     lamp.error_blink();
   }
 }
@@ -86,10 +101,10 @@ void start_timer(char* project_id) {
   is_timer_running = timer_repository.startTimer(project_id);
 
   if (is_timer_running) {
-    Serial.println("Timer started.");
+    Serial.println(F("Timer started."));
     lamp.start_breathing();
   } else {
-    Serial.println("Failed to start timer.\n");
+    Serial.println(F("Failed to start timer.\n"));
     lamp.error_blink();
   }
 }

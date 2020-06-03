@@ -15,6 +15,7 @@ class ClockfyDSImpl: public ClockfyDS, protected ApiDS {
         bool startTimer(char* project_id, char* workspace_id, char* start_time);
         bool stopTimer(char* stop_time, char* user_id, char* workspace_id);        
         UserData* getUserData();
+        char* getCurrentTimer(char* user_id, char* workspace_id);
 
     private:
         BearSSL::WiFiClientSecure getConnectedClient();

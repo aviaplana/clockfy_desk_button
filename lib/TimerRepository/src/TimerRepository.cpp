@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "TimerRepository.h"
 
 TimerRepository::TimerRepository(LocalDS* local, ClockfyDS* clockfy, DateTimeDS* datetime) {
@@ -41,6 +42,21 @@ byte TimerRepository::getNumProjects() {
     }
     
     return count;
+}
+
+Project* TimerRepository::getProject(char* id) {
+    byte count = 0;
+    Project** projects = getProjects();
+    
+    while (projects[count] != NULL) {
+        if (strcmp(projects[count]->id, id) == 0) {
+            return projects[count];
+        }
+
+        count++;
+    }
+    
+    return NULL;
 }
 
 bool TimerRepository::loadUserData() {
@@ -93,6 +109,19 @@ bool TimerRepository::startTimer(char* project_id) {
     } else {
         return false;
     }
+}
+
+Project* TimerRepository::getRunningProject() {
+    char* user_id = getUserId();
+    char* workspace_id = getWorkspaceId();
+
+    if (user_id != NULL && workspace_id != NULL) {
+        char* project_id = clockfy_ds->getCurrentTimer(user_id, workspace_id);
+        return getProject(project_id);
+    } else {
+        return NULL;
+    }
+    
 }
 
 bool TimerRepository::stopTimer() {

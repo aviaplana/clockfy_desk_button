@@ -217,6 +217,12 @@ Color ClockfyDSImpl::hexToColor(char* hex) {
 }
 
 BearSSL::WiFiClientSecure ClockfyDSImpl::getConnectedClient() {
+    WiFiClientSecure httpsClient;
+
+    if (httpsClient.connected()) {
+        return httpsClient;
+    }
+
     #ifdef DEBUG_API
         Serial.print(F("Connecting to "));
         Serial.print(host);
@@ -225,9 +231,6 @@ BearSSL::WiFiClientSecure ClockfyDSImpl::getConnectedClient() {
         Serial.print(F("\n"));
     #endif
 
-    WiFiClientSecure httpsClient;
-    
-    // Load root certificate in DER format into WiFiClientSecure object
     bool res = httpsClient.setCACert(root_ca_certificate, CLOCKFY_CERTIFICATE_LENGTH);
 
     if (!res) {
@@ -356,4 +359,53 @@ bool ClockfyDSImpl::stopTimer(char* stop_time, char* user_id, char* workspace_id
     return false;
 }
 
+char* ClockfyDSImpl::getCurrentTimer(char* user_id, char* workspace_id) {
+    WiFiClientSecure client = getConnectedClient();
+    
+    if (client.connected()) {
+        Serial.println(F("Stopping timer..."));
+        String endpoint = F("/workspaces/");
+        endpoint += workspace_id;
+        endpoint += F("/user/");
+        endpoint += user_id;
+        endpoint += F("/time-entries?in-progress=true");
+        
+        String request = generateGetRequest(&endpoint);
+
+        #ifdef DEBUG_API
+            Serial.print(F("Sending request:\n"));
+            Serial.print(request);
+            Serial.print(F("\n"));
+        #endif
+
+        client.print(request);
+        int response_code = readResponseHeaders(&client);
+
+        if (response_code == OK) {         
+            char* tag = "\"projectId\":\"";
+            char* buffer = (char*) malloc(30);
+            int size = processResponse(tag, buffer, (Stream*) &client);
+            
+            if (size > 0) {
+                buffer[size] = '\0';
+
+                #ifdef DEBUG_API
+                    Serial.print(F("Success. Timer running for project with id:\n"));
+                    Serial.print(buffer);
+                    Serial.print(F("\n"));
+                #endif
+                
+                return buffer;
+            } else {
+                #ifdef DEBUG_API
+                    Serial.println(F("Success. No timers running.\n"));
+                #endif
+            }
+        } else {
+            printErrorMessage(response_code);
+        }
+    }
+
+    return NULL;
+}
 #endif
