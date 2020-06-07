@@ -1,19 +1,22 @@
 
 [![Build Status](https://travis-ci.com/aviaplana/clockfy_desk_button.svg?token=xgcoVHECpWhjPPHdzKr9&branch=master)](https://travis-ci.com/aviaplana/clockfy_desk_button)
-
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
   
   
+<br />
 
 ## What is it?
 
 It's a physical device used to start and stop timers from clockfy. 
 
   
+<br />
 
 ## Why do I need it?
 
 I found myself using the clockfy webapp to start timers, but I kept on forgetting to stop them. I wanted to have a physical device to remid me that a timer was running, so I sarted to work on this project.
 
+<br />
   
 ## How to build the circuit?
 Components needed:
@@ -25,35 +28,55 @@ Components needed:
 - ESP8266 MCU
   
 Connections:
-- Red LED -> D8
-- Green LED -> D7
+- Green LED -> D8
+- Red LED -> D7
 - Blue LED -> D6
 - Buttton -> D2
 
-![The circuit](/circuit.jpg)
+<p align="center"> <img src="./resources/circuit.jpg" style="max-width: 500px" alt="breadboard"/> </p>
 
+<p align="center"> <img src="./resources/flywire.jpg" style="max-width: 300px" alt="flywire circuit"/> </p>
+
+<br />
 
 ## How to install it?
 Build it using the [PlatforIO IDE](https://platformio.org/). 
 
-Before burning the firmware to the MCU, 2 configuration files must be created:
+Before burning the firmware to the MCU, 2 configuration files must be created, or just rename the example files:
 
 *lib/WifiManager/src/wifi_configuration.h* - Contains the wifi credentials.
 
 *lib/TimerRepository/include/Clockfy/clockfy_configuration.h* - contains the Clockfy API key.
 
+
+<br />
+
 ## How to use it?
 
-__Short press to select a project.__ The RGB led will match the color that is associated with the project.
+__Short press to choose a project.__ 
+The light will match the project's color.
 
-__Long press to start a timer.__ The light blinks to let the user know that the request has been sent. If there's no errors, it will change color to green, and blink 3 times rapidly. On the other hand, if something goes wrong, it will change to red and blink twice.
+<p align="center"> <img src="./resources/choosing_project.gif" /> </p>
 
-__Long press to stop timer.__ Again, short green blinks to indicate that everything went ok, and long red blikns to indicate that something went wrong.
-  
+<br />
 
-## Apis
+__Long press to start a timer.__ Short blink to let the user know that the request has been sent. Breathe effect starts.
 
-__https://api.clockfy.me__ to update timers.
+<p align="center"> <img src="./resources/starting_a_timer.gif" /> </p>
+<br />
+
+__Long press to stop timer.__ The light blinks to give feedback. Rapid green blikning if the request is successful, long red blink if there's an error.
+
+<p align="center"> <img src="./resources/stopping_a_timer.gif" /> </p>
+
+<br />
+
+__Always in sync.__ It is periodically checking if there's any timer running . 
+
+<p align="center"> 
+    <img src="./resources/sync_start.gif" style="padding-right: 10px"/>
+    <img src="./resources/sync_stop.gif" style="padding-left: 10px" />
+ </p>
 
 
 <br />
@@ -63,4 +86,3 @@ __https://api.clockfy.me__ to update timers.
 
 _An api key might be found across commit history. It is no longer valid._
 
- 

@@ -10,8 +10,8 @@
 #include <DateTime/DateTimeDSImpl.h>
 #include <WifiManager.h>
 
-#define RED_LED_PIN D8
-#define GREEN_LED_PIN D7
+#define GREEN_LED_PIN D8
+#define RED_LED_PIN D7
 #define BLUE_LED_PIN D6
 #define BUTTON_PIN D2
 #define SYNC_INTERVAL 10000
