@@ -33,9 +33,9 @@ Connections:
 - Blue LED -> D6
 - Buttton -> D2
 
-<p align="center"> <img src="./resources/circuit.jpg" style="max-width: 500px" alt="breadboard"/> </p>
+<p align="center"> <img src="./resources/circuit.jpg" width="500px" alt="breadboard"/> </p>
 
-<p align="center"> <img src="./resources/flywire.jpg" style="max-width: 300px" alt="flywire circuit"/> </p>
+<p align="center"> <img src="./resources/flywire.jpg" width="400px" alt="flywire circuit"/> </p>
 
 <br />
 
